@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" output="target/classes" path="src/main/java"/>
+	<classpathentry kind="src" output="target/test-classes" path="src/test/java"/>
+	<classpathentry kind="src" path="conf"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
+	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER"/>
+	<classpathentry kind="lib" path="D:/cdh4hadooplib/lib/commons-cli-1.2.jar"/>
+	<classpathentry kind="lib" path="D:/cdh4hadooplib/lib/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="D:/cdh4hadooplib/lib/commons-pool-1.5.6.jar"/>
+	<classpathentry kind="lib" path="D:/cdh4hadooplib/lib/hadoop-annotations-2.0.0-cdh4.2.1.jar"/>
+	<classpathentry kind="lib" path="D:/cdh4hadooplib/lib/hadoop-auth-2.0.0-cdh4.2.1.jar"/>
+	<classpathentry kind="lib" path="D:/cdh4hadooplib/lib/hadoop-common-2.0.0-cdh4.2.1.jar"/>
+	<classpathentry kind="lib" path="D:/cdh4hadooplib/lib/hadoop-hdfs-2.0.0-cdh4.2.1.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/E:/workspace/hadoop/docs/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="D:/cdh4hadooplib/lib/hadoop-mapreduce-client-core-2.0.0-cdh4.2.1.jar"/>
+	<classpathentry kind="lib" path="D:/cdh4hadooplib/lib/jedis-2.1.0.jar"/>
+	<classpathentry kind="lib" path="D:/cdh4hadooplib/lib/log4j-1.2.17.jar"/>
+	<classpathentry kind="lib" path="D:/cdh4hadooplib/mahout/mahout-core-0.7-cdh4.2.1.jar"/>
+	<classpathentry kind="lib" path="D:/cdh4hadooplib/mahout/mahout-examples-0.7-cdh4.2.1.jar"/>
+	<classpathentry kind="lib" path="D:/cdh4hadooplib/mahout/mahout-math-0.7-cdh4.2.1.jar"/>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>
