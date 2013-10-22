@@ -64,17 +64,17 @@ public class SparseVector {
 			{
 				if(b.st.containsKey(entry.getKey()))
 				{		
-					sum += b.st.get(entry.getKey()) * a.st.get(entry.getKey());
+					sum += b.st.get(entry.getKey()) * entry.getValue();
 				}
 			}
 		}
 		else
 		{
-			for(Map.Entry<Integer, Double>entry : a.st.entrySet())
+			for(Map.Entry<Integer, Double>entry : b.st.entrySet())
 			{
 				if(a.st.containsKey(entry.getKey()))
 				{
-					sum += b.st.get(entry.getKey()) * a.st.get(entry.getKey());
+					sum += entry.getValue() * a.st.get(entry.getKey());
 				}
 			}
 		
@@ -82,13 +82,48 @@ public class SparseVector {
 		return sum;
 	}
 	//返回向量和
-	public void plus(SparseVector b)
+	public SparseVector plus(SparseVector b)
 	{
-		
+		SparseVector a = this ;
+		if(a.N != b.N)
+		{
+			throw new RuntimeException("Vector Length Dismatch");
+		}
+		SparseVector c =  new SparseVector(N);
+		//c = a, should have clone method
+		for(Map.Entry<Integer, Double>entry : a.st.entrySet())
+		{
+			c.put(entry.getKey(), entry.getValue());
+		}
+		for(Map.Entry<Integer, Double>entry : b.st.entrySet())
+		{
+			c.put(entry.getKey(),c.get(entry.getKey())+b.get(entry.getKey()));
+		}
+		return c;
 	}
+	   // return a string representation
+  public String toString() {
+        String s = "";
+        for (Map.Entry<Integer, Double>entry : st.entrySet()) {
+            s += "(" + entry.getKey() + ", " + st.get(entry.getKey()) + ") ";
+        }
+        return s;
+    }
+
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-
+	       SparseVector a = new SparseVector(10);
+	        SparseVector b = new SparseVector(10);
+	        a.put(3, 0.50);
+	        a.put(9, 0.75);
+	        a.put(6, 0.11);
+	        a.put(6, 0.00);
+	        b.put(3, 0.60);
+	        b.put(4, 0.90);
+	        System.out.println("a = " + a);
+	        System.out.println("b = " + b);
+	        System.out.println("a dot b = " + a.dotPro(b));
+	        System.out.println("a + b   = " + a.plus(b));
 	}
 
 }
