@@ -1,4 +1,4 @@
-package com.amap.dataplatform.bi.common;
+package com.amap.dataplatform.bi.util;
 
 import java.util.Random;
 
