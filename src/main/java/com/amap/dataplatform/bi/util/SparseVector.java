@@ -2,6 +2,7 @@ package com.amap.dataplatform.bi.util;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.NavigableMap;
 import java.util.TreeMap;
 
 /*
@@ -13,16 +14,26 @@ public class SparseVector {
 	 * @param args
 	 */
 	private final int N ; //length
-	//private ST<Integer,Double> st;// vector
-	private TreeMap<Integer,Double>st;
+	private NavigableMap<Integer,Long> st;
 	//初始化稀疏向量
 	public SparseVector(int N)
 	{
 		this.N = N;
-		this.st = new TreeMap<Integer,Double>();
+		this.st = new TreeMap<Integer,Long>();
 	}
+	public SparseVector(NavigableMap<Integer,Long> tm)
+	{
+		this.N = tm.size();
+		this.st = tm ;
+	}
+	public SparseVector(int N,NavigableMap<Integer,Long> tm)
+	{
+		this.N = N;
+		this.st = tm ;
+	}
+
 	//稀疏向量插入key-value
-	public void put(int i ,double value)
+	public void put(int i ,long value)
 	{
 		if(i < 0 || i >= N)
 		{
@@ -32,14 +43,14 @@ public class SparseVector {
 			st.put(i, value);
 	}
 	//稀疏向量取值
-	public double get(int i)
+	public long get(int i)
 	{
 		if(i < 0 || i >= N)
 		{
 			throw new RuntimeException("Illegal Index");
 		}
 		if(st.containsKey(i)) return st.get(i);
-		else return 0.0;		
+		else return 0;		
 	}
 	//返回不为0的实体数量
 	public int nnz()
@@ -52,15 +63,15 @@ public class SparseVector {
 		return N;
 	}
 	//返回与b向量的点乘结果
-	public double dotPro(SparseVector b)
+	public long dotPro(SparseVector b)
 	{
 		SparseVector a = this;
 		if(a.N!=b.N) throw new RuntimeException("Vector lengths disagree");
-		double sum = 0.0;
+		long sum = 0;
 		//遍历元素不为零较少的稀疏向量
 		if(a.nnz() <= b.nnz())
 		{
-			for(Map.Entry<Integer,Double> entry :a.st.entrySet())
+			for(Map.Entry<Integer,Long> entry :a.st.entrySet())
 			{
 				if(b.st.containsKey(entry.getKey()))
 				{		
@@ -70,7 +81,7 @@ public class SparseVector {
 		}
 		else
 		{
-			for(Map.Entry<Integer, Double>entry : b.st.entrySet())
+			for(Map.Entry<Integer, Long>entry : b.st.entrySet())
 			{
 				if(a.st.containsKey(entry.getKey()))
 				{
@@ -91,20 +102,20 @@ public class SparseVector {
 		}
 		SparseVector c =  new SparseVector(N);
 		//c = a, should have clone method
-		for(Map.Entry<Integer, Double>entry : a.st.entrySet())
+		for(Map.Entry<Integer, Long>entry : a.st.entrySet())
 		{
 			c.put(entry.getKey(), entry.getValue());
 		}
-		for(Map.Entry<Integer, Double>entry : b.st.entrySet())
+		for(Map.Entry<Integer, Long>entry : b.st.entrySet())
 		{
-			c.put(entry.getKey(),c.get(entry.getKey())+b.get(entry.getKey()));
+			c.put(entry.getKey(),c.get(entry.getKey())+entry.getValue());
 		}
 		return c;
 	}
 	   // return a string representation
   public String toString() {
         String s = "";
-        for (Map.Entry<Integer, Double>entry : st.entrySet()) {
+        for (Map.Entry<Integer, Long>entry : st.entrySet()) {
             s += "(" + entry.getKey() + ", " + st.get(entry.getKey()) + ") ";
         }
         return s;
@@ -112,18 +123,26 @@ public class SparseVector {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-	       SparseVector a = new SparseVector(10);
-	        SparseVector b = new SparseVector(10);
-	        a.put(3, 0.50);
-	        a.put(9, 0.75);
-	        a.put(6, 0.11);
-	        a.put(6, 0.00);
-	        b.put(3, 0.60);
-	        b.put(4, 0.90);
+		TreeMap<Integer,Long> tm = new TreeMap<Integer,Long>();
+		tm.put(3, 60L);
+		tm.put(4,90L);
+	    SparseVector a = new SparseVector(10);
+	    SparseVector b = new SparseVector(10);
+	    SparseVector c = new SparseVector(10,tm);
+	    SparseVector d = new SparseVector(tm);
+	        a.put(3, 50);
+	        a.put(9, 75);
+	        a.put(6, 11);
+	        a.put(6, 00);
+	        b.put(3, 60);
+	        b.put(4, 90);
 	        System.out.println("a = " + a);
 	        System.out.println("b = " + b);
-	        System.out.println("a dot b = " + a.dotPro(b));
+	        System.out.println("c = " + c);
+	        System.out.println("d = " + d);
+	    //    System.out.println("a dot b = " + a.dotPro(b));
 	        System.out.println("a + b   = " + a.plus(b));
+	        System.out.println("a + c   = " + a.plus(c));
 	}
 
 }
