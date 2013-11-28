@@ -8,30 +8,42 @@ import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.Reducer.Context;
+import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
 
 import com.amap.dataplatform.bi.common.ConstantsParseInput;
 
 public class StatAosCarRouteReducer extends Reducer<Text,Text,Text,NullWritable>{
+	
+	private MultipleOutputs<?, ?> mos;
+	 @Override
+	 public void setup(Context context) {
+		
+		 mos = new MultipleOutputs(context);
+		 }
+	 
 	public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException
 	{
-		//count * from  use_time 
-		long sum = 0;
-		Iterator<Text> it = values.iterator();
-		if (it.hasNext())
-		{
-			sum++;	
-		}
-		if(sum>=5)
-		{
+			
+		
+			String[] keys  	 =  key.toString().split(ConstantsParseInput.tableFieldsSeparator);
+			String   diu   	 =  keys[0];
+			String   source  =  keys[1];
 			for(Text val : values)
 			{
-				String setout = val.toString() + ConstantsParseInput.mapreduceFieldsSeparator+sum;
-				val.set(setout);
-				context.write(val, NullWritable.get());
-				
+				String   keyString = diu + ConstantsParseInput.mapreduceFieldsSeparator +val.toString();
+				mos.write("text", keyString,NullWritable.get(),source+"/party");
 			}
-		}
+			
 			
 	}
+	public void cleanup(Context context) throws IOException {
+		 try {
+			mos.close();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		 }
 
 }

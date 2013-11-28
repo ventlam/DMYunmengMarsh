@@ -19,6 +19,8 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Mapper.Context;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.input.MultipleInputs;
+import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
@@ -28,11 +30,16 @@ import org.apache.hadoop.util.ToolRunner;
 import com.amap.dataplatform.bi.common.ConstantsParseDate;
 import com.amap.dataplatform.bi.common.ConstantsParseInput;
 import com.amap.dataplatform.bi.southpointer.dataprep.map.StatAosCarRouteMapper;
+import com.amap.dataplatform.bi.southpointer.dataprep.map.StatBusRouteMapper;
+import com.amap.dataplatform.bi.southpointer.dataprep.map.StatNaviAutoMapper;
+import com.amap.dataplatform.bi.southpointer.dataprep.map.StatNaviBusMapper;
+import com.amap.dataplatform.bi.southpointer.dataprep.map.StatWalkRouteMapper;
+import com.amap.dataplatform.bi.southpointer.dataprep.reduce.StatAllNaviReducer;
 import com.amap.dataplatform.bi.southpointer.dataprep.reduce.StatAosCarRouteReducer;
 
-public class StatAosCarRouteJob extends Configured implements Tool{
+public class StatAllNaviJob extends Configured implements Tool{
 	public static void main(String[] args) throws Exception {
-		int exitCode = ToolRunner.run(new StatAosCarRouteJob(),  args);
+		int exitCode = ToolRunner.run(new StatAllNaviJob(),  args);
 		System.out.println(exitCode);
 	}
 
@@ -82,24 +89,49 @@ public class StatAosCarRouteJob extends Configured implements Tool{
 		}
 		
 		
-		Job job = new Job(conf,"stat_aos_car_route job"+ConstantsParseDate.outputDate(date));
-	 	job.setJarByClass(StatAosCarRouteJob.class);
-    	job.setMapperClass(StatAosCarRouteMapper.class);
-    	job.setReducerClass(StatAosCarRouteReducer.class);
+		Job job = new Job(conf,"stat_allnavi_job"+ConstantsParseDate.outputDate(date));
+	 	job.setJarByClass(StatAllNaviJob.class);
+    	job.setReducerClass(StatAllNaviReducer.class);
     	job.setMapOutputKeyClass(Text.class);
     	job.setMapOutputValueClass(Text.class);
     	job.setOutputKeyClass(Text.class);
     	job.setOutputValueClass(NullWritable.class);
-    	job.setNumReduceTasks(50);
-		String inputPathString = conf.get("mapred.job.stataoscarroute.input.datapath.template", "");
-		if ("".equalsIgnoreCase(inputPathString)) {
-			System.out.println("ERROR.job input path should be \"\"");
+    	job.setNumReduceTasks(4);
+    	
+    	String aosbusrouPathString = conf.get("mapred.job.loadaosbusroujob.input.datapath.template", "");
+		if ("".equalsIgnoreCase(aosbusrouPathString)) {
 			System.exit(-3);
 		}
-		inputPathString = ConstantsParseDate.parseDay(inputPathString, date);
-		FileInputFormat.addInputPath(job, new Path(inputPathString));
+		aosbusrouPathString = ConstantsParseDate.parseDay(aosbusrouPathString, date);
 		
-		String outputPathString = conf.get("mapred.job.stataoscarroute.output.datapath.template", "");
+		
+		String aoswalkrouPathString = conf.get("mapred.job.loadaoswalkroujob.input.datapath.template", "");
+		if ("".equalsIgnoreCase(aoswalkrouPathString)) {
+			System.exit(-3);
+		}
+		aoswalkrouPathString = ConstantsParseDate.parseDay(aoswalkrouPathString, date);
+		
+		String wsnaviautoPathString = conf.get("mapred.job.loadwsnaviautojob.input.datapath.template", "");
+		if ("".equalsIgnoreCase(wsnaviautoPathString)) {
+			
+			System.exit(-3);
+		}
+		wsnaviautoPathString = ConstantsParseDate.parseDay(wsnaviautoPathString, date);
+		
+		String wsnavibusPathString = conf.get("mapred.job.loadwsnavibusjob.input.datapath.template", "");
+		if ("".equalsIgnoreCase(wsnavibusPathString)) {
+			
+			System.exit(-3);
+		}
+		wsnavibusPathString = ConstantsParseDate.parseDay(wsnavibusPathString, date);
+		
+		MultipleInputs.addInputPath(job, new Path(aosbusrouPathString), TextInputFormat.class, StatBusRouteMapper.class);
+		MultipleInputs.addInputPath(job, new Path(aoswalkrouPathString), TextInputFormat.class, StatWalkRouteMapper.class);
+		MultipleInputs.addInputPath(job, new Path(wsnaviautoPathString), TextInputFormat.class, StatNaviAutoMapper.class);
+		MultipleInputs.addInputPath(job, new Path(wsnavibusPathString), TextInputFormat.class, StatNaviBusMapper.class);
+	
+		
+		String outputPathString = conf.get("mapred.job.statallnavi.output.datapath.template", "");
 		
 		if ("".equalsIgnoreCase(outputPathString)) {
 			System.out.println("ERROR.job output path should be \"\"");

@@ -1,74 +1,89 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-
-<!-- 	
-		<name>fs.default.name</name>
-		<value>hdfs://180.96.71.60:50080/</value>
+ 	<!-- ods_aos_busroute  -->
+ 	<property>
+		<name>mapred.job.loadwsnaviautojob.input.datapath.template</name>
+		<value>/user/amap/data/mysql/bi/ods/ws/ods_ws_navigation_auto/${year}/${month}/${day}</value>
 	</property>
-
 	
-		<name>mapred.job.tracker</name>
-		<value>180.96.71.60:50081</value>
-	</property> -->
-
-<name>fs.default.name</name>
-<value>hdfs://server01:8020/</value>
-</property>
- 
-                                                                                                                    
-<name>mapred.job.tracker</name>                                   
-<value>server01:8021</value>                                                
-</property>
-
+	<property>
+		<name>mapred.job.loadwsnavibusjob.input.datapath.template</name>
+		<value>/user/amap/data/mysql/bi/ods/ws/ods_ws_navigation_bus/${year}/${month}/${day}</value>
+	</property>
+ 		<property>
+		<name>mapred.job.loadaoswalkroujob.input.datapath.template</name>
+		<value>/user/amap/data/mysql/bi/ods/aos/ods_aos_walkroute/${year}/${month}/${day}</value>
+	</property>
+ 	<property>
+		<name>mapred.job.loadaosbusroujob.input.datapath.template</name>
+		<value>/user/amap/data/mysql/bi/ods/aos/ods_aos_busroute/${year}/${month}/${day}</value>
+	</property>
+	
+	<property>
+		<name>mapred.job.statallnavi.output.datapath.template</name>
+		<value>/user/amap/data/mysql/bi/pwd/product_temp_allnavi/${year}/${month}/${day}</value>
+	</property>
+	
 	<!-- stat_aos_car_route  -->
-	
+	<property>
 		<name>mapred.job.stataoscarroute.input.datapath.template</name>
-		<value>/user/amap/data/mysql/bi/ods/aos/ods_aos_carroute/${year}/${month}/*/o*</value>
+		<value>/user/amap/data/mysql/bi/ods/aos/ods_aos_carroute/${year}/${month}/${month}/*</value>
 	</property>
 
-	
+	<property>
 		<name>mapred.job.stataoscarroute.output.datapath.template</name>
-		<value>/user/amap/data/mysql/bi/pwd/pwd_stat_carroute/${year}/${month}</value>
+		<value>/user/amap/data/mysql/bi/pwd/pwd_stat_carroute/${year}/${month}/${day}</value>
+	</property>
+	
+	<!-- stat_aos_car_route  -->
+	<property>
+		<name>mapred.job.statallnavi_nvsj.input.datapath.template</name>
+		<value>/user/amap/data/mysql/bi/pwd/proudct_tmep_allnavi/*</value>
+	</property>
+
+	<property>
+		<name>mapred.job.statallnavi_nvsj.output.datapath.template</name>
+		<value>/user/amap/data/mysql/bi/pwd/proudct_tmep_allnavisj/${year}/${month}/${day}</value>
 	</property>
 	<!-- stat_aos_rcs  -->
-	
+	<property>
 		<name>mapred.job.stataosrcs.input.datapath.template</name>
 		<value>/user/amap/data/mysql/bi/ods/aos/ods_aos_rcs/${year}/${month}/*/o*</value>
 	</property>
 
-	
+	<property>
 		<name>mapred.job.stataosrcs.output.datapath.template</name>
 		<value>/user/amap/data/mysql/bi/pwd/pwd_stat_rcs/${year}/${month}</value>
 	</property>
 		<!-- stat_aos_traffic  -->
-	
+	<property>
 		<name>mapred.job.stataostraffic.input.datapath.template</name>
 		<value>/user/amap/data/mysql/bi/ods/aos/ods_aos_traffic/${year}/${month}/*/o*</value>
 	</property>
 
-	
+	<property>
 		<name>mapred.job.stataostraffic.output.datapath.template</name>
 		<value>/user/amap/data/mysql/bi/pwd/pwd_stat_traffic/${year}/${month}</value>
 	</property>
 	
 		<!-- stat_top_user_gis -->
-	
+	<property>
 		<name>mapred.job.stattop5usergis.input.datapath.template</name>
 		<value>/user/amap/data/mysql/bi/pwd/pwd_stat_usergis/${year}/${month}/*/p*</value>
 	</property>
 
-	
+	<property>
 		<name>mapred.job.stattop5usergis.output.datapath.template</name>
 		<value>/user/amap/data/mysql/bi/pwd/pwd_stat_top5usergis/${year}/${month}</value>
 	</property>
 			<!-- stat_top_user_gis_someone -->
-	
+	<property>
 		<name>mapred.job.statusergissomeone.input.datapath.template</name>
 		<value>/user/amap/data/mysql/bi/pwd/pwd_stat_usergis/${year}/${month}/*/p*</value>
 	</property>
 
-	
+	<property>
 		<name>mapred.job.statusergissomeone.output.datapath.template</name>
 		<value>/user/amap/data/mysql/bi/pwd/pwd_stat_usergis_someone/${year}/${month}</value>
 	</property>

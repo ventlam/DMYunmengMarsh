@@ -27,12 +27,15 @@ import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import com.amap.dataplatform.bi.common.ConstantsParseDate;
 import com.amap.dataplatform.bi.common.ConstantsParseInput;
+import com.amap.dataplatform.bi.southpointer.dataprep.map.StatAllNaviSJMapper;
 import com.amap.dataplatform.bi.southpointer.dataprep.map.StatAosCarRouteMapper;
+import com.amap.dataplatform.bi.southpointer.dataprep.reduce.StatAllNaviSJReducer;
 import com.amap.dataplatform.bi.southpointer.dataprep.reduce.StatAosCarRouteReducer;
 
-public class StatAosCarRouteJob extends Configured implements Tool{
+
+public class StatAllNaviSJJob extends Configured implements Tool{
 	public static void main(String[] args) throws Exception {
-		int exitCode = ToolRunner.run(new StatAosCarRouteJob(),  args);
+		int exitCode = ToolRunner.run(new StatAllNaviSJJob(),  args);
 		System.out.println(exitCode);
 	}
 
@@ -82,16 +85,16 @@ public class StatAosCarRouteJob extends Configured implements Tool{
 		}
 		
 		
-		Job job = new Job(conf,"stat_aos_car_route job"+ConstantsParseDate.outputDate(date));
-	 	job.setJarByClass(StatAosCarRouteJob.class);
-    	job.setMapperClass(StatAosCarRouteMapper.class);
-    	job.setReducerClass(StatAosCarRouteReducer.class);
+		Job job = new Job(conf,"stat_aos_car_route _sj_dic_job"+ConstantsParseDate.outputDate(date));
+	 	job.setJarByClass(StatAllNaviSJJob.class);
+    	job.setMapperClass(StatAllNaviSJMapper.class);
+    	job.setReducerClass(StatAllNaviSJReducer.class);
     	job.setMapOutputKeyClass(Text.class);
     	job.setMapOutputValueClass(Text.class);
     	job.setOutputKeyClass(Text.class);
     	job.setOutputValueClass(NullWritable.class);
-    	job.setNumReduceTasks(50);
-		String inputPathString = conf.get("mapred.job.stataoscarroute.input.datapath.template", "");
+    	job.setNumReduceTasks(1);
+		String inputPathString = conf.get("mapred.job.statallnavi_nvsj.input.datapath.template", "");
 		if ("".equalsIgnoreCase(inputPathString)) {
 			System.out.println("ERROR.job input path should be \"\"");
 			System.exit(-3);
@@ -99,7 +102,7 @@ public class StatAosCarRouteJob extends Configured implements Tool{
 		inputPathString = ConstantsParseDate.parseDay(inputPathString, date);
 		FileInputFormat.addInputPath(job, new Path(inputPathString));
 		
-		String outputPathString = conf.get("mapred.job.stataoscarroute.output.datapath.template", "");
+		String outputPathString = conf.get("mapred.job.statallnavi_nvsj.output.datapath.template", "");
 		
 		if ("".equalsIgnoreCase(outputPathString)) {
 			System.out.println("ERROR.job output path should be \"\"");
@@ -110,8 +113,6 @@ public class StatAosCarRouteJob extends Configured implements Tool{
 		FileSystem fileSystem = FileSystem.get(URI.create(outputPathString), job.getConfiguration());
 		fileSystem.delete(outputPath, true);
 		FileOutputFormat.setOutputPath(job, outputPath);
-		MultipleOutputs.addNamedOutput(job, "text", TextOutputFormat.class,
-				 Text.class, NullWritable.class);
 		
 		
 		return job.waitForCompletion(true) ? 0 : 1;

@@ -50,4 +50,12 @@ public class ConstantsParseDate {
 
 		return PathString;
 	}
+		public static String outputDate(Date date)
+	   {
+		   GregorianCalendar gregorianCalendar = new GregorianCalendar(); 
+			gregorianCalendar.setTime(date);
+			gregorianCalendar.add(Calendar.DATE, -1);
+			date = gregorianCalendar.getTime();
+			return  date.toString();
+	   }
 }
